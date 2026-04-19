@@ -2,4 +2,4 @@
 require("@babel/register")({
   presets: ["@babel/preset-react"]
 });
-require("./index.jsx"); // Now you can import JSX directly
+require("./app.jsx"); // Now you can import JSX directly
