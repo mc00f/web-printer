@@ -1,6 +1,8 @@
 /* i have zero idea how this works, blame claude */
 import { useState, useRef, useEffect } from "react";
+
 const THERMAL_FONT = "'Courier New', Courier, monospace";
+
 const TEST_PRINT_LINES = [
  "================================",
  " ** TEST PRINT ** ",
@@ -23,6 +25,7 @@ const TEST_PRINT_LINES = [
  " END OF TEST PRINT ",
  "================================",
 ];
+
 function formatTimestamp(date) {
  return date.toLocaleString("en-US", {
  month: "2-digit",
@@ -34,16 +37,20 @@ function formatTimestamp(date) {
  hour12: true,
  });
 }
+
 function ReceiptPaper({ lines, timestamp, id, onDiscard, isNew }) {
  const [visible, setVisible] = useState(false);
  const [discarding, setDiscarding] = useState(false);
+
  useEffect(() => {
  requestAnimationFrame(() => setVisible(true));
  }, []);
+
  const handleDiscard = () => {
  setDiscarding(true);
  setTimeout(() => onDiscard(id), 350);
  };
+
  return (
  <div
  style={{
@@ -61,16 +68,19 @@ function ReceiptPaper({ lines, timestamp, id, onDiscard, isNew }) {
  <div style={{ position: "relative", height: "10px", overflow: "hidden" }}>
  <svg width="100%" height="10" viewBox="0 0 400 10" preserveAspectRatio="none">
  <path
- d="M0,10 Q10,0 20,8 Q30,16 40,6 Q50,-2 60,8 Q70,16 80,4 Q90,-4 100,8 Q110,16 120, fill="#f0ece2"
+ d="M0,10 Q10,0 20,8 Q30,16 40,6 Q50,-2 60,8 Q70,16 80,4 Q90,-4 100,8 Q110,16 120,4 Q130,-4 140,8 Q150,16 160,6 Q170,-2 180,8 Q190,16 200,4 Q210,-4 220,8 Q230,16 240,6 Q250,-2 260,8 Q270,16 280,4 Q290,-4 300,8 Q310,16 320,4 Q330,-4 340,8 Q350,16 360,6 Q370,-2 380,8 Q390,16 400,10"
+ fill="#f0ece2"
  />
  </svg>
  </div>
+
  {/* Receipt body */}
  <div
  style={{
  background: "#f0ece2",
  backgroundImage:
- "repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(0,0,0,0.03)  padding: "10px 20px 16px",
+ "repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(0,0,0,0.03) 24px)",
+ padding: "10px 20px 16px",
  fontFamily: THERMAL_FONT,
  fontSize: "13px",
  lineHeight: "24px",
@@ -91,6 +101,7 @@ function ReceiptPaper({ lines, timestamp, id, onDiscard, isNew }) {
  >
  PRINTED: {timestamp}
  </div>
+
  {lines.map((line, i) => (
  <div
  key={i}
@@ -103,6 +114,7 @@ function ReceiptPaper({ lines, timestamp, id, onDiscard, isNew }) {
  {line}
  </div>
  ))}
+
  {/* Discard button */}
  <button
  onClick={handleDiscard}
@@ -123,28 +135,31 @@ function ReceiptPaper({ lines, timestamp, id, onDiscard, isNew }) {
  transition: "all 0.15s",
  }}
  onMouseEnter={(e) => {
- e.target.style.background = "#e0d4bf";
- e.target.style.color = "#7a3020";
+ e.currentTarget.style.background = "#e0d4bf";
+ e.currentTarget.style.color = "#7a3020";
  }}
  onMouseLeave={(e) => {
- e.target.style.background = "none";
- e.target.style.color = "#b08060";
+ e.currentTarget.style.background = "none";
+ e.currentTarget.style.color = "#b08060";
  }}
  >
  DISCARD
  </button>
  </div>
+
  {/* Tear edge bottom */}
  <div style={{ position: "relative", height: "10px", overflow: "hidden" }}>
  <svg width="100%" height="10" viewBox="0 0 400 10" preserveAspectRatio="none">
  <path
- d="M0,0 Q10,10 20,2 Q30,-6 40,4 Q50,14 60,2 Q70,-6 80,6 Q90,14 100,2 Q110,-6 120, fill="#f0ece2"
+ d="M0,0 Q10,10 20,2 Q30,-6 40,4 Q50,14 60,2 Q70,-6 80,6 Q90,14 100,2 Q110,-6 120,4 Q130,14 140,2 Q150,-6 160,6 Q170,14 180,2 Q190,-6 200,4 Q210,14 220,2 Q230,-6 240,6 Q250,14 260,2 Q270,-6 280,4 Q290,14 300,2 Q310,-6 320,4 Q330,14 340,2 Q350,-6 360,6 Q370,14 380,2 Q390,-6 400,0"
+ fill="#f0ece2"
  />
  </svg>
  </div>
  </div>
  );
 }
+
 function PrinterStatus({ printing }) {
  return (
  <div
@@ -176,12 +191,14 @@ function PrinterStatus({ printing }) {
  </div>
  );
 }
+
 export default function ReceiptPrinter() {
  const [prints, setPrints] = useState([]);
  const [customText, setCustomText] = useState("");
  const [printing, setPrinting] = useState(false);
- const [activeTab, setActiveTab] = useState("custom"); // "custom" | "test"
+ const [activeTab, setActiveTab] = useState("custom");
  const outputRef = useRef(null);
+
  const doPrint = (lines) => {
  setPrinting(true);
  setTimeout(() => {
@@ -197,28 +214,34 @@ export default function ReceiptPrinter() {
  }, 50);
  }, 700);
  };
+
  const handleCustomPrint = () => {
  if (!customText.trim()) return;
  const lines = customText.split("\n");
  doPrint(lines);
  setCustomText("");
  };
+
  const handleTestPrint = () => {
  doPrint(TEST_PRINT_LINES);
  };
+
  const handleDiscard = (id) => {
  setPrints((prev) => prev.filter((p) => p.id !== id));
  };
+
  const handleDiscardAll = () => {
  setPrints([]);
  };
+
  return (
  <div
  style={{
  minHeight: "100vh",
  background: "#1a1510",
  backgroundImage:
- "radial-gradient(ellipse at 20% 10%, #2a1f0a 0%, transparent 60%), radial-gradient( display: "flex",
+ "radial-gradient(ellipse at 20% 10%, #2a1f0a 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #1a2010 0%, transparent 60%)",
+ display: "flex",
  flexDirection: "column",
  alignItems: "center",
  padding: "32px 16px 48px",
@@ -227,12 +250,14 @@ export default function ReceiptPrinter() {
  >
  <style>{`
  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
- @keyframes feed { 0%{transform:translateY(-8px);opacity:0} 100%{transform:translateY( textarea { resize: vertical; }
+ @keyframes feed { 0%{transform:translateY(-8px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+ textarea { resize: vertical; }
  textarea::placeholder { opacity: 0.5; }
  ::-webkit-scrollbar { width: 6px; }
  ::-webkit-scrollbar-track { background: #111; }
  ::-webkit-scrollbar-thumb { background: #3a3028; border-radius: 3px; }
  `}</style>
+
  {/* Printer Machine */}
  <div
  style={{
@@ -241,7 +266,8 @@ export default function ReceiptPrinter() {
  background: "linear-gradient(160deg, #2e2820 0%, #201c14 100%)",
  borderRadius: "18px 18px 10px 10px",
  boxShadow:
- "0 4px 32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.07), 0 0 0 1px rgba overflow: "hidden",
+ "0 4px 32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.07), 0 0 0 1px rgba(0,0,0,0.5)",
+ overflow: "hidden",
  marginBottom: "0px",
  }}
  >
@@ -252,7 +278,8 @@ export default function ReceiptPrinter() {
  borderBottom: "1px solid rgba(255,255,255,0.06)",
  }}
  >
- <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between <div>
+ <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+ <div>
  <div
  style={{
  fontSize: "19px",
@@ -264,11 +291,13 @@ export default function ReceiptPrinter() {
  >
  THERMOPRINT
  </div>
- <div style={{ fontSize: "10px", color: "#706050", letterSpacing: "0.1em", margi WEB RECEIPT TERMINAL
+ <div style={{ fontSize: "10px", color: "#706050", letterSpacing: "0.1em", marginTop: "2px" }}>
+ WEB RECEIPT TERMINAL
  </div>
  </div>
  <PrinterStatus printing={printing} />
  </div>
+
  {/* Paper slot visual */}
  <div
  style={{
@@ -286,12 +315,14 @@ export default function ReceiptPrinter() {
  style={{
  position: "absolute",
  inset: 0,
- background: "linear-gradient(90deg, transparent, #f0ece2 40%, #f0ece2 60%,  animation: "feed 0.7s ease-in-out",
+ background: "linear-gradient(90deg, transparent, #f0ece2 40%, #f0ece2 60%, transparent)",
+ animation: "feed 0.7s ease-in-out",
  }}
  />
  )}
  </div>
  </div>
+
  {/* Control panel */}
  <div style={{ padding: "16px 24px 20px" }}>
  {/* Tabs */}
@@ -323,12 +354,14 @@ export default function ReceiptPrinter() {
  background: activeTab === tab ? "#3a2f1c" : "transparent",
  color: activeTab === tab ? "#e8c870" : "#706050",
  fontWeight: activeTab === tab ? "700" : "400",
- boxShadow: activeTab === tab ? "inset 0 1px 0 rgba(255,255,255,0.06)" : "no }}
+ boxShadow: activeTab === tab ? "inset 0 1px 0 rgba(255,255,255,0.06)" : "none",
+ }}
  >
  {tab === "custom" ? "CUSTOM PRINT" : "TEST PRINT"}
  </button>
  ))}
  </div>
+
  {activeTab === "custom" && (
  <div style={{ animation: "feed 0.2s ease" }}>
  <textarea
@@ -351,13 +384,14 @@ export default function ReceiptPrinter() {
  letterSpacing: "0.03em",
  transition: "border-color 0.15s",
  }}
- onFocus={(e) => (e.target.style.borderColor = "rgba(232,200,112,0.3)")}
- onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
+ onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(232,200,112,0.3)")}
+ onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}
  onKeyDown={(e) => {
  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) handleCustomPrint();
  }}
  />
- <div style={{ fontSize: "10px", color: "#504030", marginTop: "4px", letterSpaci CTRL+ENTER TO PRINT
+ <div style={{ fontSize: "10px", color: "#504030", marginTop: "4px", letterSpacing: "0.04em" }}>
+ CTRL+ENTER TO PRINT
  </div>
  <button
  onClick={handleCustomPrint}
@@ -382,13 +416,15 @@ export default function ReceiptPrinter() {
  textTransform: "uppercase",
  }}
  onMouseEnter={(e) => {
- if (!(!customText.trim() || printing)) e.target.style.filter = "brightness( }}
- onMouseLeave={(e) => (e.target.style.filter = "none")}
+ if (!(!customText.trim() || printing)) e.currentTarget.style.filter = "brightness(1.1)";
+ }}
+ onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
  >
- {printing ? "PRINTING..." : "▶ PRINT"}
+ {printing ? "PRINTING..." : " PRINT"}
  </button>
  </div>
  )}
+
  {activeTab === "test" && (
  <div style={{ animation: "feed 0.2s ease" }}>
  <div
@@ -404,7 +440,7 @@ export default function ReceiptPrinter() {
  marginBottom: "12px",
  }}
  >
- Sends a standard diagnostic print to verify paper feed, character rendering,  alignment. Prints will appear in the output tray below.
+ Sends a standard diagnostic print to verify paper feed, character rendering, and alignment. Prints will appear in the output tray below.
  </div>
  <button
  onClick={handleTestPrint}
@@ -427,16 +463,17 @@ export default function ReceiptPrinter() {
  textTransform: "uppercase",
  }}
  onMouseEnter={(e) => {
- if (!printing) e.target.style.filter = "brightness(1.1)";
+ if (!printing) e.currentTarget.style.filter = "brightness(1.1)";
  }}
- onMouseLeave={(e) => (e.target.style.filter = "none")}
+ onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
  >
- {printing ? "PRINTING..." : "▶ SEND TEST PRINT"}
+ {printing ? "PRINTING..." : " SEND TEST PRINT"}
  </button>
  </div>
  )}
  </div>
  </div>
+
  {/* Output tray label */}
  <div
  style={{
@@ -482,13 +519,14 @@ export default function ReceiptPrinter() {
  textTransform: "uppercase",
  transition: "color 0.15s",
  }}
- onMouseEnter={(e) => (e.target.style.color = "#c04020")}
- onMouseLeave={(e) => (e.target.style.color = "#604030")}
+ onMouseEnter={(e) => (e.currentTarget.style.color = "#c04020")}
+ onMouseLeave={(e) => (e.currentTarget.style.color = "#604030")}
  >
  DISCARD ALL
  </button>
  )}
  </div>
+
  {/* Receipts */}
  <div
  ref={outputRef}
