@@ -8,5 +8,8 @@ Heya! Got bored while doing homework and decided to prop this idea into Claude (
 ### Prequisities
 - Node.js
 - Babel (npm install --save-dev @babel/core @babel/node @babel/preset-react)
+- React
 ### Instalation
-1. im stuck here let me fgure it out
+No idea- works weirdly in codespaces
+---
+contributions hghly appreciated!
